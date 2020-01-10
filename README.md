@@ -25,13 +25,11 @@ Example Playbook
 ----------------
 
 ```yaml
-- hosts: kvm
+- hosts: ocp4-provisioner
   tasks:
-  - name: Deploy kvm
-    vars:
-      kvm_hostname_full: kvm.example.com
+  - name: Deploy ocp4-provisioner
     roles:
-      - RegHatGov.kvm
+      - ocp4-provisioner
 ```
 
 License
