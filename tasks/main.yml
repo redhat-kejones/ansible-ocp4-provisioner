@@ -17,12 +17,6 @@
   poll: 30
   tags: prep
 
-- name: install unzip
-  become: yes
-  package:
-    name: unzip
-    state: present
-
 - name: check Kernel is the Latest
   shell: if [ $(uname -r) == $(rpm -q kernel | tail -n 1 | sed -e 's/kernel-//g') ] ; then echo no ; else echo reboot; fi
   ignore_errors: true
@@ -76,12 +70,12 @@
 
 - name: unpacking ocp4 Linux installer and client
   unarchive:
-    src: "{{ item }}"
+    src: ocp4/{{ item }}
     remote_src: true
-    dest: ocp4/
+    dest: ocp4/{{ item }}
   loop:
-    - 'ocp4/openshift-install-linux-{{ ocp4_version }}.tar.gz'
-    - 'ocp4/openshift-client-linux-{{ ocp4_version }}.tar.gz'
+    - 'openshift-install-linux-{{ ocp4_version }}.tar.gz'
+    - 'openshift-client-linux-{{ ocp4_version }}.tar.gz'
 
 - name: Create a symbolic link
   become: yes
