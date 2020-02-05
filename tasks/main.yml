@@ -17,6 +17,11 @@
   poll: 30
   tags: prep
 
+- name: install unzip
+  package:
+    name: unzip
+    state: present
+
 - name: check Kernel is the Latest
   shell: if [ $(uname -r) == $(rpm -q kernel | tail -n 1 | sed -e 's/kernel-//g') ] ; then echo no ; else echo reboot; fi
   ignore_errors: true
