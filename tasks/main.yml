@@ -1,12 +1,14 @@
 ---
 # tasks file for ocp4-provisioner
 - name: set hostname
+  become: yes
   hostname:
     name: "{{ ocp4_provisioner_hostname }}.{{ domain }}"
   tags: prep
 
 # update packages
 - name: update packages
+  become: yes
   yum:
     name: '*'
     state: latest
@@ -22,6 +24,7 @@
   tags: prep
 
 - name: restart host to get updated kernel
+  become: yes
   shell: sleep 2 && shutdown -r now "Ansible restart triggered"
   async: 1
   poll: 0
@@ -75,9 +78,12 @@
     - 'ocp4/openshift-client-linux-{{ ocp4_version }}.tar.gz'
 
 - name: Create a symbolic link
+  become: yes
   file:
     src: "ocp4/{{ item }}"
     dest: /usr/local/bin/{{ item }}
+    owner: root
+    group: root
     state: link
   loop:
     - 'oc'
