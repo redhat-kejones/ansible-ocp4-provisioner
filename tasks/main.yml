@@ -72,7 +72,7 @@
   unarchive:
     src: ocp4/{{ item }}
     remote_src: true
-    dest: ocp4/{{ item }}
+    dest: ocp4
   loop:
     - 'openshift-install-linux-{{ ocp4_version }}.tar.gz'
     - 'openshift-client-linux-{{ ocp4_version }}.tar.gz'
