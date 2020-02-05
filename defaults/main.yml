@@ -1,2 +1,6 @@
 ---
 # defaults file for ocp4-provisioner
+domain: example.com
+ocp4_provisioner_hostname: ocp4-provisioner
+ocp4_provisioner_public_ip: 192.0.2.250
+ocp4_version: 4.3.0

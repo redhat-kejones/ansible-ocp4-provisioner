@@ -1,2 +1,85 @@
 ---
 # tasks file for ocp4-provisioner
+- name: set hostname
+  hostname:
+    name: "{{ ocp4_provisioner_hostname }}.{{ domain }}"
+  tags: prep
+
+# update packages
+- name: update packages
+  yum:
+    name: '*'
+    state: latest
+  register: yum_result
+  async: 1000
+  poll: 30
+  tags: prep
+
+- name: check Kernel is the Latest
+  shell: if [ $(uname -r) == $(rpm -q kernel | tail -n 1 | sed -e 's/kernel-//g') ] ; then echo no ; else echo reboot; fi
+  ignore_errors: true
+  register: reboot_hint
+  tags: prep
+
+- name: restart host to get updated kernel
+  shell: sleep 2 && shutdown -r now "Ansible restart triggered"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: yum_result.changed or reboot_hint.stdout.find("reboot") != -1
+  tags: prep
+
+- name: waiting for Server to come back
+  wait_for:
+    host: "{{ ocp4_provisioner_public_ip }}"
+    state: started
+    delay: 10
+    connect_timeout: 5
+    timeout: 300
+    port: 22
+  delegate_to: 127.0.0.1
+  become: false
+  ignore_errors: true
+  tags: prep
+
+- name: generate ssh key for use across systems
+  user:
+    name: {{ ansible_ssh_user }}
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+
+- name: make ocp4 directory
+  file:
+    path: "ocp4"
+    state: directory
+    mode: 0755
+
+- name: download ocp4 Linux installer tarball
+  get_url:
+    url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp4_version }}/openshift-install-linux-{{ ocp4_version }}.tar.gz
+    dest: ocp4/openshift-install-linux-{{ ocp4_version }}.tar.gz
+
+- name: download ocp4 Linux client tarball
+  get_url:
+    url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp4_version }}/openshift-client-linux-{{ ocp4_version }}.tar.gz
+    dest: ocp4/openshift-client-linux-{{ ocp4_version }}.tar.gz
+
+- name: unpacking ocp4 Linux installer and client
+  unarchive:
+    src: "{{ item }}"
+    remote_src: true
+    dest: ocp4/
+  loop:
+    - 'ocp4/openshift-install-linux-{{ ocp4_version }}.tar.gz'
+    - 'ocp4/openshift-client-linux-{{ ocp4_version }}.tar.gz'
+
+- name: Create a symbolic link
+  file:
+    src: "ocp4/{{ item }}"
+    dest: /usr/local/bin/{{ item }}
+    state: link
+  loop:
+    - 'oc'
+    - 'kubectl'
+    - 'openshift-install'
