@@ -44,10 +44,14 @@
   command: openshift-install create manifests --dir=ocp4/{{ ocp4_cluster_name }}/
 
 #- name: modify cluster scheduler manifest for baremetal install
-#vi ocp/manifests/cluster-scheduler-02-config.yml
+- name: Replace a localhost entry with our own
+  lineinfile:
+    path: ~/ocp4/{{ ocp4_cluster_name }}/manifests/cluster-scheduler-02-config.yml
+    regexp: 'mastersSchedulable'
+    line: "  mastersSchedulable: false"
 
-#- name: create ocp4 ignition configs
-#./openshift-install create ignition-configs --dir=ocp/
+- name: create ocp4 ignition configs
+  command: openshift-install create ignition-configs --dir=ocp4/{{ ocp4_cluster_name }}/
 
-#- name: copy ignition configs to web server
-#scp ocp/*.ign admin@10.99.99.11:/volume1/web/ocp42/ign/
+- debug:
+    msg: "At this point you need to copy the ignition files from ocp4/{{ ocp_cluster_name}}/ign to a web server. You also need to have your PXE server configured for the nodes to boot RHCOS with the proper ignition config"
