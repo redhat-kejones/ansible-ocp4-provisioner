@@ -20,25 +20,25 @@
 - name: pause to verify DNS records
   pause:
 
-- name: make cluster directory
+#- name: make cluster directory
 
-- name: create ocp4 install-config file
+#- name: create ocp4 install-config file
 #openshift-install create install-config --dir=ocp
 
-- name: add ssh pub key to install config
+#- name: add ssh pub key to install config
 
-- name: add pull secret to install config
+#- name: add pull secret to install config
 
-- name: copy install-config.yaml into cluster director
+#- name: copy install-config.yaml into cluster director
 
-- name: create ocp4 manifests
+#- name: create ocp4 manifests
 #./openshift-install create manifests --dir=ocp/
 
-- name: modify cluster scheduler manifest for baremetal install
+#- name: modify cluster scheduler manifest for baremetal install
 #vi ocp/manifests/cluster-scheduler-02-config.yml
 
-- name: create ocp4 ignition configs
+#- name: create ocp4 ignition configs
 #./openshift-install create ignition-configs --dir=ocp/
 
-- name: copy ignition configs to web server
+#- name: copy ignition configs to web server
 #scp ocp/*.ign admin@10.99.99.11:/volume1/web/ocp42/ign/
