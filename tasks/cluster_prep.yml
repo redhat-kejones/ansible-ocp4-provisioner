@@ -54,4 +54,4 @@
   command: openshift-install create ignition-configs --dir=ocp4/{{ ocp4_cluster_name }}/
 
 - debug:
-    msg: "At this point you need to copy the ignition files from ocp4/{{ ocp_cluster_name}}/ign to a web server. You also need to have your PXE server configured for the nodes to boot RHCOS with the proper ignition config"
+    msg: "At this point you need to copy the ignition files from ocp4/{{ ocp4_cluster_name}}/ign to a web server. You also need to have your PXE server configured for the nodes to boot RHCOS with the proper ignition config"
