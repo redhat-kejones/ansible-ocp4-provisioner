@@ -1,13 +1,15 @@
 ---
 # defaults file for ocp4-provisioner
 domain: example.com
+
 ocp4_provisioner_hostname: ocp4-provisioner
 ocp4_provisioner_public_ip: 192.0.2.250
+
 ocp4_version: 4.3.0
-
+ocp4_installer_type: upi
+ocp4_provider: baremetal
 ocp4_pull_secret: ""
-ocp4_ssh_pub_key: ""
-
+ocp4_ssh_pub_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 ocp4_cluster_name: ocp
 ocp4_master_replicas: 3
 ocp4_worker_replicas: 0

@@ -1,5 +1,5 @@
-- name: validate dns records
-  debug: msg="Please confirm A record {{ item.name }} - {{ item.lookup }}"
+- name: output dns A records
+  debug: msg="Please verify A record for {{ item.name }} - {{ item.lookup }}"
   loop:
     - name: bootstrap
       lookup: "{{ lookup('dig', 'bootstrap.' + ocp4_cluster_name + '.' + domain + '.', 'flat=0', wantlist=True) }}"
@@ -12,34 +12,36 @@
     - name: "*.apps"
       lookup: "{{ lookup('dig', 'test.apps.' + ocp4_cluster_name + '.' + domain + '.', 'flat=0', wantlist=True) }}"
 
-- name: validate CNAME record for api-int.{{ ocp4_cluster_name }}
-  debug: msg="Please confirm CNAME record {{ item.name }} - {{ item.lookup }}"
+- name: output dns CNAME records for api.{{ ocp4_cluster_name }} and api-int.{{ ocp4_cluster_name }}
+  debug: msg="Please verify CNAME record for {{ item.name }} - {{ item.lookup }}"
   loop:
     - name: api
       lookup: "{{ lookup('dig', 'api.' + ocp4_cluster_name + '.' + domain + '.', 'qtype=CNAME', 'flat=0', wantlist=True) }}"
     - name: api-int
       lookup: "{{ lookup('dig', 'api-int.' + ocp4_cluster_name + '.' + domain + '.', 'qtype=CNAME', 'flat=0', wantlist=True) }}"
 
-- name: validate SRV dns records
-  debug: msg="SRV record {{ item }}"
+- name: output dns SRV records
+  debug: msg="Please verify SRV record for {{ item }}"
   with_items: "{{ lookup('dig', '_etcd-server-ssl._tcp.' + ocp4_cluster_name + '.' + domain + '.', 'qtype=SRV', 'flat=0', wantlist=True) }}"
 
 - name: pause to verify DNS records. If DNS is not right, OpenShift will not deploy
   pause:
 
-#- name: make cluster directory
+- name: make ocp4 cluster directory
+  file:
+    path: "ocp4/{{ ocp4_cluster_name }}"
+    state: directory
+    mode: 0755
 
-#- name: create ocp4 install-config file
-#openshift-install create install-config --dir=ocp
+- name: create ocp4 install-config file
+  template:
+    src: baremetal-install-config.yaml.j2
+    dest: ~/ocp4/{{ ocp4_cluster_name }}/install-config.yaml
+    mode: 0644
+  when: ocp4_installer_type == 'upi' and ocp4_provider == 'baremetal'
 
-#- name: add ssh pub key to install config
-
-#- name: add pull secret to install config
-
-#- name: copy install-config.yaml into cluster director
-
-#- name: create ocp4 manifests
-#./openshift-install create manifests --dir=ocp/
+- name: create ocp4 manifests
+  command: openshift-install create manifests --dir=ocp4/{{ ocp4_cluster_name }}/
 
 #- name: modify cluster scheduler manifest for baremetal install
 #vi ocp/manifests/cluster-scheduler-02-config.yml
