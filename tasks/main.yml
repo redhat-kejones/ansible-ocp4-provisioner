@@ -70,9 +70,9 @@
 
 - name: unpacking ocp4 Linux installer and client
   unarchive:
-    src: ocp4/{{ item }}
+    src: ~/ocp4/{{ item }}
     remote_src: true
-    dest: ocp4
+    dest: ~/ocp4
   loop:
     - 'openshift-install-linux-{{ ocp4_version }}.tar.gz'
     - 'openshift-client-linux-{{ ocp4_version }}.tar.gz'
@@ -80,7 +80,7 @@
 - name: Create a symbolic link
   become: yes
   file:
-    src: "ocp4/{{ item }}"
+    src: "~/ocp4/{{ item }}"
     dest: /usr/local/bin/{{ item }}
     owner: root
     group: root
