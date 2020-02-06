@@ -9,7 +9,7 @@
       lookup: "{{ lookup('dig', 'etcd-1.' + ocp4_cluster_name + '.' + domain + '.', 'flat=0', wantlist=True) }}"
     - name: etcd-2
       lookup: "{{ lookup('dig', 'etcd-2.' + ocp4_cluster_name + '.' + domain + '.', 'flat=0', wantlist=True) }}"
-    - name: *.apps
+    - name: "*.apps"
       lookup: "{{ lookup('dig', 'test.apps.' + ocp4_cluster_name + '.' + domain + '.', 'flat=0', wantlist=True) }}"
 
 - name: validate CNAME record for api-int.{{ ocp4_cluster_name }}
