@@ -77,10 +77,10 @@
     - 'openshift-install-linux-{{ ocp4_version }}.tar.gz'
     - 'openshift-client-linux-{{ ocp4_version }}.tar.gz'
 
-- name: Create a symbolic link
+- name: create a symbolic links for the ocp 4 binaries
   become: yes
   file:
-    src: "~/ocp4/{{ item }}"
+    src: "/home/{{ ansible_ssh_user }}/ocp4/{{ item }}"
     dest: /usr/local/bin/{{ item }}
     owner: root
     group: root
@@ -89,3 +89,17 @@
     - 'oc'
     - 'kubectl'
     - 'openshift-install'
+  when: ansible_ssh_user != "root"
+
+- name: create a symbolic links for the ocp 4 binaries (if running as root)
+  file:
+    src: "/root/ocp4/{{ item }}"
+    dest: /usr/local/bin/{{ item }}
+    owner: root
+    group: root
+    state: link
+  loop:
+    - 'oc'
+    - 'kubectl'
+    - 'openshift-install'
+  when: ansible_ssh_user == "root"
