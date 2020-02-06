@@ -15,6 +15,7 @@
   poll: 30
 
 - name: install jq
+  become: yes
   package:
     name: jq
     state: present
