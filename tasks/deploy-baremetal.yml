@@ -1,12 +1,6 @@
 - name: wait for ocp4 bootstrap complete
 #./openshift-install wait-for bootstrap-complete --dir=ocp/
 
-- name: make .kube directory in current user home
-mkdir ~/.kube
-
-- name: copy kubeconfig to .kube directory
-#cp ocp/auth/kubeconfig ~/.kube/config
-
 - name: get csrs waiting on approval
 #oc get csr
 

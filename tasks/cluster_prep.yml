@@ -50,8 +50,26 @@
     regexp: 'mastersSchedulable'
     line: "  mastersSchedulable: false"
 
+- name: verify mastersScheduable
+  pause:
+
 - name: create ocp4 ignition configs
   command: openshift-install create ignition-configs --dir=ocp4/{{ ocp4_cluster_name }}/
+
+#NOTE: Not sure we should do this (if multiple clusters)
+- name: make .kube directory in current user home
+  file:
+    path: "~/.kube"
+    state: directory
+    mode: 0755
+
+#NOTE: Not sure we should do this (if multiple clusters on same provisioner)
+- name: copy kubeconfig to .kube directory
+  copy:
+    src: ~/ocp4/{{ ocp4_cluster_name }}/auth/kubeconfig
+    remote_src: true
+    dest: ~/.kube/config
+    mode: 0644
 
 - debug:
     msg: "At this point you need to copy the ignition files from ocp4/{{ ocp4_cluster_name}}/ign to a web server. You also need to have your PXE server configured for the nodes to boot RHCOS with the proper ignition config"
