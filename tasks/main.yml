@@ -4,9 +4,7 @@
   become: yes
   hostname:
     name: "{{ ocp4_provisioner_hostname }}.{{ domain }}"
-  tags: prep
 
-# update packages
 - name: update packages
   become: yes
   yum:
@@ -15,13 +13,16 @@
   register: yum_result
   async: 1000
   poll: 30
-  tags: prep
+
+- name: install jq
+  package:
+    name: jq
+    state: present
 
 - name: check Kernel is the Latest
   shell: if [ $(uname -r) == $(rpm -q kernel | tail -n 1 | sed -e 's/kernel-//g') ] ; then echo no ; else echo reboot; fi
   ignore_errors: true
   register: reboot_hint
-  tags: prep
 
 - name: restart host to get updated kernel
   become: yes
@@ -30,7 +31,6 @@
   poll: 0
   ignore_errors: true
   when: yum_result.changed or reboot_hint.stdout.find("reboot") != -1
-  tags: prep
 
 - name: waiting for Server to come back
   wait_for:
@@ -43,7 +43,6 @@
   delegate_to: 127.0.0.1
   become: false
   ignore_errors: true
-  tags: prep
 
 - name: generate ssh key for use across systems
   user:

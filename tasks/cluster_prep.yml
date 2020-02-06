@@ -1,0 +1,44 @@
+- name: validate dns records
+  debug: msg="Please confirm A record: {{ item }}"
+  loop:
+    - {{ lookup('dig', 'bootstrap.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.')}}
+    - {{ lookup('dig', 'etcd-0.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.')}}
+    - {{ lookup('dig', 'etcd-1.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.')}}
+    - {{ lookup('dig', 'etcd-2.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.')}}
+    - {{ lookup('dig', '*.apps.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.')}}
+
+- name: validate CNAME record for api-int.{{ ocp4_cluster_name }}
+  debug: msg="Please confirm CNAME record: "
+  loop:
+    - {{ lookup('dig', 'api.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.', 'qtype=CNAME') }}
+    - {{ lookup('dig', 'api-int.' + {{ ocp4_cluster_name }} + '.' + {{ domain }} + '.', 'qtype=CNAME') }}
+
+- name: validate SRV dns records
+  debug: msg="SRV record for {{ ocp4_cluster_name }}.{{ domain }} {{ item }}"
+  with_items: "{{ lookup('dig', '{{ domain }}.', 'qtype=SRV') }}"
+
+- name: pause to verify DNS records
+  pause:
+
+- name: make cluster directory
+
+- name: create ocp4 install-config file
+#openshift-install create install-config --dir=ocp
+
+- name: add ssh pub key to install config
+
+- name: add pull secret to install config
+
+- name: copy install-config.yaml into cluster director
+
+- name: create ocp4 manifests
+#./openshift-install create manifests --dir=ocp/
+
+- name: modify cluster scheduler manifest for baremetal install
+#vi ocp/manifests/cluster-scheduler-02-config.yml
+
+- name: create ocp4 ignition configs
+#./openshift-install create ignition-configs --dir=ocp/
+
+- name: copy ignition configs to web server
+#scp ocp/*.ign admin@10.99.99.11:/volume1/web/ocp42/ign/

@@ -4,3 +4,14 @@ domain: example.com
 ocp4_provisioner_hostname: ocp4-provisioner
 ocp4_provisioner_public_ip: 192.0.2.250
 ocp4_version: 4.3.0
+
+ocp4_pull_secret: ""
+ocp4_ssh_pub_key: ""
+
+ocp4_cluster_name: ocp
+ocp4_master_replicas: 3
+ocp4_worker_replicas: 0
+ocp4_cluster_network_cidr: 10.128.0.0/14
+ocp4_host_prefix: 23
+ocp4_network_type: OpenShiftSDN
+ocp4_service_network_cidr: 172.30.0.0/16

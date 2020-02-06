@@ -1,0 +1,26 @@
+- name: set up OCS (ceph)
+
+- name: set up registry storage
+#TODO: use persistent storage
+#oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{"spec":{"storage":{"emptyDir":{}}}}'
+
+- name: set up logging storage
+
+- name: set up userspace storage (some block, some shared)
+
+- name: set up authentication provider
+#TODO: GitHub, htaccess
+
+- name: grant cluster-admin role to admin users
+#oc adm policy add-cluster-role-to-user cluster-admin kjw3
+
+- name: set up CNV (for baremetal clusters)
+
+- name: set up logging
+
+- name: set up alerting
+
+- name: install legit certificates
+
+#TODO
+#- name: migration toolkit
