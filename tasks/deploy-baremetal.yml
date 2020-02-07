@@ -1,12 +1,12 @@
-- name: wait for ocp4 bootstrap complete
+#- name: wait for ocp4 bootstrap complete
 #./openshift-install wait-for bootstrap-complete --dir=ocp/
 
-- name: get csrs waiting on approval
+#- name: get csrs waiting on approval
 #oc get csr
 
-- name: approve csrs
+#- name: approve csrs
 #oc get csr -ojson | jq -r '.items[] | select(.status == {} ) | .metadata.name' | xargs oc adm certificate approve
 #oc get csr -o name | xargs oc adm certificate approve
 
-- name: wait for ocp4 install complete
+#- name: wait for ocp4 install complete
 #./openshift-install wait-for install-complete --dir=ocp
