@@ -48,20 +48,16 @@
 - name: create ocp4 manifests
   command: openshift-install create manifests --dir=ocp4/{{ ocp4_cluster_name }}/
 
-#- name: modify cluster scheduler manifest for baremetal install
-- name: Replace a localhost entry with our own
+- name: modify cluster scheduler manifest for baremetal install
   lineinfile:
     path: ~/ocp4/{{ ocp4_cluster_name }}/manifests/cluster-scheduler-02-config.yml
     regexp: 'mastersSchedulable'
     line: "  mastersSchedulable: false"
 
-- name: verify mastersScheduable
-  pause:
-
 - name: create ocp4 ignition configs
   command: openshift-install create ignition-configs --dir=ocp4/{{ ocp4_cluster_name }}/
 
-#NOTE: Not sure we should do this (if multiple clusters)
+#NOTE: Not sure we should do this (if we support multiple clusters)
 - name: make .kube directory in current user home
   file:
     path: "~/.kube"
