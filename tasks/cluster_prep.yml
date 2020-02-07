@@ -33,6 +33,11 @@
     state: directory
     mode: 0755
 
+- name: get SSH public key for current user
+  slurp:
+    src: "~/.ssh/id_rsa.pub"
+  register: ocp4_ssh_pub_key
+
 - name: create ocp4 install-config file
   template:
     src: baremetal-install-config.yaml.j2
